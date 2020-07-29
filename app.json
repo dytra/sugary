@@ -2,11 +2,12 @@
   "name": "sugary",
   "displayName": "sugary",
   "expo": {
-    "name": "sugary",
-    "slug": "sugary",
+    "name": "sugary-dev",
+    "slug": "sugary-dev",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "description": "sugary development"
   }
 }
