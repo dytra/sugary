@@ -11,7 +11,7 @@ const Consumptions = ({ navigation, state, route }) => {
     // console.log(item);
     return (
       // <ListItem title={`${item.id} ${index + 1}`} />
-      <ListItem title={`${item.id}`} description={`${item.amount}`} />
+      <ListItem title={`${item.id}`} description={`${item.amount}gr`} />
     )
   }
 
