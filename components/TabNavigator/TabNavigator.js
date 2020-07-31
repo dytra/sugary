@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Layout, BottomNavigation, BottomNavigationTab, Text } from '@ui-kitten/components';
+import { Layout, BottomNavigation, BottomNavigationTab, Text, useTheme } from '@ui-kitten/components';
 import { Consumptions, ConsumptionForm } from "../../screens";
+import { SafeAreaView } from "react-native";
 
 
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -26,6 +27,7 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
       onSelect={index => navigation.navigate(state.routeNames[index], {
         consumptions: props.consumptions,
         setConsumptions: props.setConsumptions,
+        ...props
       }
       )}>
       <BottomNavigationTab title='Home' />
@@ -35,14 +37,17 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
   )
 };
 const TabNavigator = ({ consumptions, setConsumptions, }) => {
+  const theme = useTheme();
   // console.log('consumptions now hehe');
   // console.log(consumptions);
   return (
-    <Navigator initialRouteName='Users' tabBar={props => <BottomTabBar {...props} consumptions={consumptions} setConsumptions={setConsumptions} /*handlePressSubmit={handlePressSubmit}*/ />} >
-      <Screen name='Users' component={UsersScreen} />
-      <Screen name='Consumptions' component={Consumptions} />
-      <Screen name='Add Consumption' component={ConsumptionForm} />
-    </Navigator>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme['background-basic-color-1'] }}>
+      <Navigator initialRouteName='Users' tabBar={props => <BottomTabBar {...props} consumptions={consumptions} setConsumptions={setConsumptions} /*handlePressSubmit={handlePressSubmit}*/ />} >
+        <Screen name='Users' component={UsersScreen} />
+        <Screen name='Consumptions' component={Consumptions} />
+        <Screen name='Add Consumption' component={ConsumptionForm} />
+      </Navigator>
+    </SafeAreaView>
   )
 }
 

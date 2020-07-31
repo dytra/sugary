@@ -4,7 +4,7 @@ import { Layout, Text, Input, Button } from "@ui-kitten/components";
 const ConsumptionForm = ({ route, navigation }) => {
   const { setConsumptions, consumptions } = route.params;
   const [value, setValue] = useState();
-
+  
   const handlePressSubmit = (value, navigation) => {
     console.log('consumptions in form');
     console.log(route);
