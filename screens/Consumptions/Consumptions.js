@@ -1,25 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Divider, Layout, Text, Button, List, ListItem } from "@ui-kitten/components"
 const Consumptions = ({ navigation, state, route }) => {
   const { consumptions, setConsumptions, handlePressSubmit } = route.params;
 
   const renderItem = ({ item, index }) => {
-    // console.log(item);
     return (
-      // <ListItem title={`${item.id} ${index + 1}`} />
       <ListItem title={`${item.id}`} description={`${item.amount}gr`} />
     )
   }
-
-  useEffect(() => {
-
-  });
 
   return (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 50 }}>
       <Text category='h1'>Consumptions</Text>
       <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
+        consumptions,
         setConsumptions: setConsumptions,
         handlePressSubmit: handlePressSubmit,
       })}>Add</Button>

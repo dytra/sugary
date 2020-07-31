@@ -19,16 +19,6 @@ const OrdersScreen = () => (
 );
 const BottomTabBar = ({ navigation, state, ...props }) => {
 
-  // useEffect(() => {
-  //   const didBlurSubscription = navigation.addListener(
-  //     'didBlur',
-  //     payload => {
-  //       console.debug('didBlur', payload);
-  //     });
-  //   return () => {
-  //     didBlurSubscription.removeListener();
-  //   }
-  // }, []);
   return (
     <BottomNavigation
       test="yolo"
@@ -36,7 +26,6 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
       onSelect={index => navigation.navigate(state.routeNames[index], {
         consumptions: props.consumptions,
         setConsumptions: props.setConsumptions,
-        handlePressSubmit: props.handlePressSubmit,
       }
       )}>
       <BottomNavigationTab title='Home' />
@@ -45,11 +34,11 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
 
   )
 };
-const TabNavigator = ({ consumptions, setConsumptions, handlePressSubmit }) => {
+const TabNavigator = ({ consumptions, setConsumptions, }) => {
   // console.log('consumptions now hehe');
   // console.log(consumptions);
   return (
-    <Navigator initialRouteName='Users' tabBar={props => <BottomTabBar {...props} consumptions={consumptions} setConsumptions={setConsumptions} handlePressSubmit={handlePressSubmit} />} >
+    <Navigator initialRouteName='Users' tabBar={props => <BottomTabBar {...props} consumptions={consumptions} setConsumptions={setConsumptions} /*handlePressSubmit={handlePressSubmit}*/ />} >
       <Screen name='Users' component={UsersScreen} />
       <Screen name='Consumptions' component={Consumptions} />
       <Screen name='Add Consumption' component={ConsumptionForm} />

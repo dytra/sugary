@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import 'react-native-gesture-handler';
 import { StyleSheet, View, /*Text,*/ Button } from 'react-native';
 // import { StatusBar } from 'expo-status-bar';
@@ -17,23 +17,11 @@ export default function App() {
     amount: 32,
   }]);
 
-  const handlePressSubmit = (value, navigation) => {
-    const newConsumptions = [
-      ...consumptions,
-      {
-        id: consumptions.length + 1,
-        amount: value
-      }
-    ];
-    setConsumptions(newConsumptions);
-    navigation.navigate('Consumptions', {
-      consumptions: newConsumptions,
-    });
-  }
+
   return (
     <NavigationContainer>
       <ApplicationProvider {...eva} theme={eva.dark}>
-        <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} handlePressSubmit={handlePressSubmit} />
+        <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} />
       </ApplicationProvider>
 
     </NavigationContainer>
