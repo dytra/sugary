@@ -1,12 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Divider, Layout, Text, Button, List, ListItem } from "@ui-kitten/components"
 const Consumptions = ({ navigation, state, route }) => {
   const { consumptions, setConsumptions, handlePressSubmit } = route.params;
 
-  const data = new Array(8).fill({
-    title: 'Item',
-  });
   const renderItem = ({ item, index }) => {
     // console.log(item);
     return (
@@ -14,6 +11,10 @@ const Consumptions = ({ navigation, state, route }) => {
       <ListItem title={`${item.id}`} description={`${item.amount}gr`} />
     )
   }
+
+  useEffect(() => {
+
+  });
 
   return (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 50 }}>

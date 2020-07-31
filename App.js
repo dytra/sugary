@@ -18,22 +18,18 @@ export default function App() {
   }]);
 
   const handlePressSubmit = (value, navigation) => {
-    setConsumptions([
+    const newConsumptions = [
       ...consumptions,
       {
         id: consumptions.length + 1,
         amount: value
       }
-    ]);
-    console.log('button pressed');
-    navigation.navigate('Consumptions');
+    ];
+    setConsumptions(newConsumptions);
+    navigation.navigate('Consumptions', {
+      consumptions: newConsumptions,
+    });
   }
-
-  useEffect(() => {
-    // console.log('consumptions now');
-    // console.log(consumptions);
-
-  }, [consumptions]);
   return (
     <NavigationContainer>
       <ApplicationProvider {...eva} theme={eva.dark}>

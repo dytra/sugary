@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-const { Navigator, Screen } = createBottomTabNavigator();
 import { Layout, BottomNavigation, BottomNavigationTab, Text } from '@ui-kitten/components';
 import { Consumptions, ConsumptionForm } from "../../screens";
+
+
+const { Navigator, Screen } = createBottomTabNavigator();
 
 const UsersScreen = () => (
   <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -44,8 +46,8 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
   )
 };
 const TabNavigator = ({ consumptions, setConsumptions, handlePressSubmit }) => {
-  console.log('consumptions now hehe');
-  console.log(consumptions);
+  // console.log('consumptions now hehe');
+  // console.log(consumptions);
   return (
     <Navigator initialRouteName='Users' tabBar={props => <BottomTabBar {...props} consumptions={consumptions} setConsumptions={setConsumptions} handlePressSubmit={handlePressSubmit} />} >
       <Screen name='Users' component={UsersScreen} />

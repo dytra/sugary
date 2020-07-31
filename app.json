@@ -8,6 +8,7 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "description": "sugary development"
+    "description": "sugary development",
+    "githubUrl": "https://github.com/dytra/sugary"
   }
 }
