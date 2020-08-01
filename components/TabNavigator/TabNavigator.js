@@ -32,6 +32,8 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
       onSelect={index => navigation.navigate(state.routeNames[index], {
         consumptions: props.consumptions,
         setConsumptions: props.setConsumptions,
+        totalAmount: props.totalAmount,
+        setTotalAmount:props.setTotalAmount,
         ...props
       }
       )}>
@@ -41,13 +43,13 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
 
   )
 };
-const TabNavigator = ({ consumptions, setConsumptions, }) => {
+const TabNavigator = ({ consumptions, setConsumptions,totalAmount,setTotalAmount }) => {
   const theme = useTheme();
   // console.log('consumptions now hehe');
   // console.log(consumptions);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme['background-basic-color-1'] }}>
-      <Navigator initialRouteName='Users' tabBar={props => <BottomTabBar {...props} consumptions={consumptions} setConsumptions={setConsumptions} /*handlePressSubmit={handlePressSubmit}*/ />} >
+      <Navigator initialRouteName='Users' tabBar={props => <BottomTabBar {...props} consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} /*handlePressSubmit={handlePressSubmit}*/ />} >
         <Screen name='Users' component={UsersScreen} />
         <Screen name='Consumptions' component={Consumptions} />
         <Screen name='Add Consumption' component={ConsumptionForm} />

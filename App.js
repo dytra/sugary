@@ -23,6 +23,7 @@ export default function App() {
     createdDate: Date.now(),
     type: 'glucose',
   }]);
+  const [totalAmount, setTotalAmount] = useState(0);
 
   YellowBox.ignoreWarnings([
     'Non-serializable values were found in the navigation state',
@@ -57,7 +58,7 @@ export default function App() {
       <NavigationContainer>
         <IconRegistry icons={EvaIconsPack} />
         {/* <SafeAreaView> */}
-        <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} />
+        <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
         {/* </SafeAreaView> */}
 
       </NavigationContainer>

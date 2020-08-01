@@ -3,11 +3,11 @@ import { StyleSheet, } from 'react-native';
 import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNavigationAction, Icon, useTheme } from "@ui-kitten/components"
 
 const Consumptions = ({ navigation, state, route, ...props }) => {
-  const { consumptions, setConsumptions, handlePressSubmit } = route.params;
-  const [totalAmount, setTotalAmount] = useState(0);
+  const { consumptions, setConsumptions, totalAmount, setTotalAmount } = route.params;
+  const [localTotalAmount, setLocalTotalAmount] = useState(0);
   const renderItem = ({ item, index }) => {
     return (
-      <ListItem title={`${item.amount}gr`} style={{paddingTop:20,paddingBottom:20}} /*description={`${item.amount}gr`}*/ />
+      <ListItem key={index} title={`${item.amount}gr`} style={{ paddingTop: 20, paddingBottom: 20 }} /*description={`${item.amount}gr`}*/ />
     )
   }
 
@@ -27,25 +27,44 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
     />
   );
 
-  useEffect(() => {
-    async function countTotalAmount(consumptions) {
-      return new Promise((resolve, reject) => {
-        let tempTotal = 0;
-        consumptions.forEach(item => {
-          tempTotal = tempTotal + item?.amount;
-        });
-        resolve(tempTotal);
+
+  async function countTotalAmount(consumptions) {
+    return new Promise((resolve, reject) => {
+      let tempTotal = 0;
+      consumptions.forEach(item => {
+        tempTotal = tempTotal + item?.amount;
       });
-    }
+      resolve(tempTotal);
+    });
+  }
+
+  useEffect(() => {
     async function start() {
       const total = await countTotalAmount(consumptions);
+      console.log('total areee', total);
       setTotalAmount(total);
+      setLocalTotalAmount(total);
     }
     if (consumptions && consumptions?.length > 0) {
       start();
     }
 
   }, [consumptions]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('state', () => {
+      async function start() {
+        const total = await countTotalAmount(consumptions);
+
+        setTotalAmount(total);
+        setLocalTotalAmount(total);
+      }
+      if (consumptions && consumptions?.length > 0) {
+        start();
+      }
+    });
+    return unsubscribe;
+  }, [navigation, consumptions]);
 
 
   // const TopNavigationStyling = () => (
@@ -60,11 +79,10 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
       <TopNavigationSimpleUsageShowcase />
       <Layout style={{ flex: 1, /*justifyContent: 'center',*/ alignItems: 'center', /*paddingTop: 25*/ }}>
         <Text category='h2'>Consumptions</Text>
-        <Text style={{ marginBottom: 5 }}>Total Consumptions Today: {totalAmount}gr</Text>
+        <Text style={{ marginBottom: 5 }}>Total Consumptions Today: {localTotalAmount}gr</Text>
         <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
           consumptions,
           setConsumptions: setConsumptions,
-          handlePressSubmit: handlePressSubmit,
         })}>Add</Button>
         <List
           style={styles.container}
