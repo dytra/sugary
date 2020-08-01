@@ -10,6 +10,7 @@ import TabNavigator from "./components/TabNavigator/TabNavigator";
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { ModelConsumptions } from "./models";
 import AsyncStorage from '@react-native-community/async-storage';
+import TotalAmountContext from "./contexts/TotalAmountContext";
 
 export default function App() {
   const [consumptions, setConsumptions] = useState([{
@@ -53,16 +54,17 @@ export default function App() {
   }, []);
 
   return (
+    <TotalAmountContext.Provider value={totalAmount}>
+      <ApplicationProvider {...eva} theme={eva.dark}>
+        <NavigationContainer>
+          <IconRegistry icons={EvaIconsPack} />
+          {/* <SafeAreaView> */}
+          <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
+          {/* </SafeAreaView> */}
 
-    <ApplicationProvider {...eva} theme={eva.dark}>
-      <NavigationContainer>
-        <IconRegistry icons={EvaIconsPack} />
-        {/* <SafeAreaView> */}
-        <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
-        {/* </SafeAreaView> */}
-
-      </NavigationContainer>
-    </ApplicationProvider>
+        </NavigationContainer>
+      </ApplicationProvider>
+    </TotalAmountContext.Provider>
   );
 }
 

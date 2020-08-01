@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, } from 'react-native';
 import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNavigationAction, Icon, useTheme } from "@ui-kitten/components"
-
+import TotalAmountContext from "../../contexts/TotalAmountContext";
 const Consumptions = ({ navigation, state, route, ...props }) => {
   const { consumptions, setConsumptions, totalAmount, setTotalAmount } = route.params;
-  const [localTotalAmount, setLocalTotalAmount] = useState(0);
+  const globalTotalAmount = useContext(TotalAmountContext);
   const renderItem = ({ item, index }) => {
     return (
       <ListItem key={index} title={`${item.amount}gr`} style={{ paddingTop: 20, paddingBottom: 20 }} /*description={`${item.amount}gr`}*/ />
@@ -43,7 +43,6 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
       const total = await countTotalAmount(consumptions);
       console.log('total areee', total);
       setTotalAmount(total);
-      setLocalTotalAmount(total);
     }
     if (consumptions && consumptions?.length > 0) {
       start();
@@ -51,20 +50,6 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
 
   }, [consumptions]);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('state', () => {
-      async function start() {
-        const total = await countTotalAmount(consumptions);
-
-        setTotalAmount(total);
-        setLocalTotalAmount(total);
-      }
-      if (consumptions && consumptions?.length > 0) {
-        start();
-      }
-    });
-    return unsubscribe;
-  }, [navigation, consumptions]);
 
 
   // const TopNavigationStyling = () => (
@@ -79,7 +64,7 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
       <TopNavigationSimpleUsageShowcase />
       <Layout style={{ flex: 1, /*justifyContent: 'center',*/ alignItems: 'center', /*paddingTop: 25*/ }}>
         <Text category='h2'>Consumptions</Text>
-        <Text style={{ marginBottom: 5 }}>Total Consumptions Today: {localTotalAmount}gr</Text>
+        <Text style={{ marginBottom: 5 }}>Total Consumptions Today: {globalTotalAmount}gr</Text>
         <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
           consumptions,
           setConsumptions: setConsumptions,
