@@ -41,7 +41,6 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
   useEffect(() => {
     async function start() {
       const total = await countTotalAmount(consumptions);
-      console.log('total areee', total);
       setTotalAmount(total);
     }
     if (consumptions && consumptions?.length > 0) {
