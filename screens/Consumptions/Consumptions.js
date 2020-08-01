@@ -1,11 +1,10 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet,  } from 'react-native';
 import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNavigationAction, Icon, useTheme } from "@ui-kitten/components"
+
 const Consumptions = ({ navigation, state, route, ...props }) => {
   const { consumptions, setConsumptions, handlePressSubmit } = route.params;
-  const theme = useTheme();
-  console.log(theme);
-  // console.log('props are', props);
+  
   const renderItem = ({ item, index }) => {
     return (
       <ListItem title={`${item.id}`} description={`${item.amount}gr`} />
@@ -27,6 +26,10 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
       title='Eva Application'
     />
   );
+
+  useEffect(() => {
+
+  }, []);
 
 
   // const TopNavigationStyling = () => (

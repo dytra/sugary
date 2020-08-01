@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Layout, Text, Input, Button } from "@ui-kitten/components";
+import AsyncStorage from '@react-native-community/async-storage';
 
 const ConsumptionForm = ({ route, navigation }) => {
   const { setConsumptions, consumptions } = route.params;
   const [value, setValue] = useState();
-  
-  const handlePressSubmit = (value, navigation) => {
-    console.log('consumptions in form');
-    console.log(route);
+
+  const handlePressSubmit = async (value, navigation) => {
+    // console.log('consumptions in form');
+    // console.log(route);
     const newConsumptions = [
       ...consumptions,
       {
@@ -15,11 +16,22 @@ const ConsumptionForm = ({ route, navigation }) => {
         amount: value
       }
     ];
+    storeData(JSON.stringify(newConsumptions));
     setConsumptions(newConsumptions);
     navigation.navigate('Consumptions', {
       consumptions: newConsumptions,
     });
   }
+
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('consumptions', value);
+      console.log('success saving data to async storage');
+    } catch (e) {
+      console.log('error saving consumption data');
+    }
+  }
+
   return (
     <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text category='h1'>Consumptions</Text>
