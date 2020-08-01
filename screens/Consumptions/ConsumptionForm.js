@@ -13,7 +13,9 @@ const ConsumptionForm = ({ route, navigation }) => {
       ...consumptions,
       {
         id: consumptions.length + 1,
-        amount: value
+        createdDate: Date.now(),
+        type: 'glucose',
+        amount: parseInt(value),
       }
     ];
     storeData(JSON.stringify(newConsumptions));

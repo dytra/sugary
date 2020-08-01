@@ -14,11 +14,14 @@ import AsyncStorage from '@react-native-community/async-storage';
 export default function App() {
   const [consumptions, setConsumptions] = useState([{
     id: 1,
-    // inputDate: new Date(),
     amount: 16,
+    createdDate: Date.now(),
+    type: 'glucose',
   }, {
     id: 2,
     amount: 32,
+    createdDate: Date.now(),
+    type: 'glucose',
   }]);
 
   YellowBox.ignoreWarnings([
@@ -42,6 +45,7 @@ export default function App() {
         // error reading value
         console.log(e);
       }
+      // await AsyncStorage.clear();
     }
     getData();
 

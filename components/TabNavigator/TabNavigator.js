@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Layout, BottomNavigation, BottomNavigationTab, Text, useTheme } from '@ui-kitten/components';
+import { Layout, BottomNavigation, BottomNavigationTab, Text, useTheme, Icon } from '@ui-kitten/components';
 import { Consumptions, ConsumptionForm } from "../../screens";
 import { SafeAreaView } from "react-native";
 
@@ -19,7 +19,12 @@ const OrdersScreen = () => (
   </Layout>
 );
 const BottomTabBar = ({ navigation, state, ...props }) => {
-
+  const HomeIcon = (props) => (
+    <Icon {...props} name='home-outline' />
+  )
+  const FileIcon = (props) => (
+    <Icon {...props} name='droplet-outline' />
+  )
   return (
     <BottomNavigation
       test="yolo"
@@ -30,8 +35,8 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
         ...props
       }
       )}>
-      <BottomNavigationTab title='Home' />
-      <BottomNavigationTab title='Consumptions' />
+      <BottomNavigationTab title='Home' icon={HomeIcon} />
+      <BottomNavigationTab title='Consumptions' icon={FileIcon} />
     </BottomNavigation>
 
   )

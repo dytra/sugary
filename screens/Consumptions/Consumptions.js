@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
-import { StyleSheet,  } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, } from 'react-native';
 import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNavigationAction, Icon, useTheme } from "@ui-kitten/components"
 
 const Consumptions = ({ navigation, state, route, ...props }) => {
   const { consumptions, setConsumptions, handlePressSubmit } = route.params;
-  
+  const [totalAmount, setTotalAmount] = useState(0);
   const renderItem = ({ item, index }) => {
     return (
-      <ListItem title={`${item.id}`} description={`${item.amount}gr`} />
+      <ListItem title={`${item.amount}gr`} style={{paddingTop:20,paddingBottom:20}} /*description={`${item.amount}gr`}*/ />
     )
   }
 
@@ -28,8 +28,24 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
   );
 
   useEffect(() => {
+    async function countTotalAmount(consumptions) {
+      return new Promise((resolve, reject) => {
+        let tempTotal = 0;
+        consumptions.forEach(item => {
+          tempTotal = tempTotal + item?.amount;
+        });
+        resolve(tempTotal);
+      });
+    }
+    async function start() {
+      const total = await countTotalAmount(consumptions);
+      setTotalAmount(total);
+    }
+    if (consumptions && consumptions?.length > 0) {
+      start();
+    }
 
-  }, []);
+  }, [consumptions]);
 
 
   // const TopNavigationStyling = () => (
@@ -43,7 +59,8 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
     <>
       <TopNavigationSimpleUsageShowcase />
       <Layout style={{ flex: 1, /*justifyContent: 'center',*/ alignItems: 'center', /*paddingTop: 25*/ }}>
-        <Text category='h1'>Consumptions</Text>
+        <Text category='h2'>Consumptions</Text>
+        <Text style={{ marginBottom: 5 }}>Total Consumptions Today: {totalAmount}gr</Text>
         <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
           consumptions,
           setConsumptions: setConsumptions,
