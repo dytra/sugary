@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Layout, Text,Button,useTheme } from "@ui-kitten/components";
 import ConsumptionsContext from "../../contexts/ConsumptionsContext";
-
+import Svg from "react-native-svg";
 import { StyleSheet, View } from "react-native";
 import { VictoryBar, VictoryChart, VictoryTheme,VictoryPie,VictoryAnimation,VictoryLabel,VictoryScatter } from "victory-native";
 
@@ -13,8 +13,6 @@ const HomeScreen = ({route,...props}) => {
   const [maxAmount,setMaxAmount] = useState(36);
   const [pieChartData,setPieChartData] = useState([{ x: 1, y: 0 }, { x: 2, y: 100 - 100 }]);
   const theme = useTheme();
-
-  console.log(theme['color-success-400']);
 
   const handlePressReset = () => {
     // setConsumptions([]);
@@ -51,7 +49,7 @@ const HomeScreen = ({route,...props}) => {
     } else {
       const diff = maxAmount - totalAmount;
       setDiffAmount(diff);
-      const percent = Math.round(diff/maxAmount*100);
+      const percent = 100 - Math.round(diff/maxAmount*100);
       setDiffAmountPercent(percent);
     }
 
@@ -67,7 +65,7 @@ const HomeScreen = ({route,...props}) => {
   }
 
   return (
-    <Layout style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Layout style={{ flex: 1, /*justifyContent: 'center'*/ alignItems: 'center' }}>
       <Text category='h1'>Home</Text>
       <Text>Total Amount of Consumptions Today : {totalAmount}gr</Text>
       <Text>Available Glucose to user: {diffAmount}gr</Text>
@@ -77,25 +75,52 @@ const HomeScreen = ({route,...props}) => {
       {totalAmount < maxAmount && (
         <Text>You area safe</Text>
       )}
+      <Button onPress={handlePressReset}>Reset</Button>
+          <Svg viewBox="0 0 400 400" width="100%" height="100%">
         <VictoryPie
-            width={250} height={250}
+            // width={250} height={250}
             data={pieChartData}
             innerRadius={100}
             cornerRadius={25}
             labels={() => null}
             style={{
               data: { fill: ({ datum }) => {
-                const color = datum.y > 30 ? theme['color-success-500'] : "red";
+                const color = datum.y > 30 ? "red" : theme['color-success-500'];
                 return datum.x === 1 ? color : "transparent";
               }
               }
             }}
-          />
+          >
 
+          </VictoryPie>
+
+          <VictoryLabel
+          textAnchor="middle"
+          style={{ fontSize: 40,fill:'white',fontWeight:'bold' }}
+          x={200} y={90}
+          text={`${diffAmountPercent}%`}
+        />
+          </Svg>
+          {/* <CustomLabel role="label"/> */}
  
-      <Button onPress={handlePressReset}>Reset</Button>
+      
     </Layout>
 
+  )
+}
+
+const CustomLabel = () => {
+  return (
+<VictoryLabel
+          textAnchor="middle"
+          style={{ fontSize: 30,data: {
+            fill: () => {
+              return 'red'
+            }
+          } }}
+          x={200} y={200}
+          text="Lorem ipsum dolor sit amet"
+        />
   )
 }
 
