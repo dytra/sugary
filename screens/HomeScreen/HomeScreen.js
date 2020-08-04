@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Layout, Text,Button,useTheme } from "@ui-kitten/components";
+import { Layout, Text,Button,useTheme,Card,Icon } from "@ui-kitten/components";
 import ConsumptionsContext from "../../contexts/ConsumptionsContext";
 import Svg from "react-native-svg";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, ScrollView,View } from "react-native";
 import { VictoryBar, VictoryChart, VictoryTheme,VictoryPie,VictoryAnimation,VictoryLabel,VictoryScatter } from "victory-native";
 
 const HomeScreen = ({route,...props}) => {
@@ -65,18 +65,57 @@ const HomeScreen = ({route,...props}) => {
   }
 
   return (
-    <Layout style={{ flex: 1, /*justifyContent: 'center'*/ alignItems: 'center' }}>
-      <Text category='h1'>Home</Text>
-      <Text>Total Amount of Consumptions Today : {totalAmount}gr</Text>
-      <Text>Available Glucose to user: {diffAmount}gr</Text>
+    <Layout style={{flex: 1, /*justifyContent: 'center'*/ alignItems: 'center',/*height:1000,*/overflow:'scroll' }}>
+      <ScrollView  showsVerticalScrollIndicator={false} >
+      {/* <Text category='h1'>Home</Text> */}
+      {/* <Text>Total Amount of Consumptions Today : {totalAmount}gr</Text>
+      <Text>Available Glucose to user: {diffAmount}gr</Text> */}
+      
+      <Text style={{fontSize:11,textAlign:'center',fontWeight:'bold',color:theme['color-primary-300'],marginBottom:6,marginTop:13}}>DAILY CONSUMPTION</Text>
+      <Text style={{fontSize:20,textAlign:'center'}}>You have consumed</Text>
+      <Text style={{fontSize:20,textAlign:'center'}}>
+        <Text style={{fontSize:20,fontWeight:'bold',color:theme['color-primary-400']}}>{diffAmountPercent}%</Text> of your daily consumption</Text>
+      <DiffAmountSection pieChartData={pieChartData} theme={theme} diffAmountPercent={diffAmountPercent} totalAmount={totalAmount}/>
+
+      <InfoBox totalAmount={totalAmount} maxAmount={maxAmount}/>
+
+      <Button onPress={handlePressReset} style={{alignSelf:'center'}}>Reset</Button>
+ 
+      
+      </ScrollView>
+    </Layout>
+
+  )
+}
+
+const InfoBox = ({totalAmount,maxAmount}) => {
+  return(
+    <View style={{marginBottom:10}}>
+    <Card /*status='warning'*/ style={{marginLeft:10,marginRight:10}}>
       {totalAmount > maxAmount && (
         <Text>You're in danger</Text>
       )}
       {totalAmount < maxAmount && (
-        <Text>You area safe</Text>
+        <View style={{flexDirection:'row'}}>
+            <Icon fill='white'style={{width: 32,
+              height: 32,marginRight:5}} name='droplet-outline'/>
+          <View style={{justifyContent:'center'}}>
+            <Text>You're fine for now</Text>
+
+          </View>
+        </View>
       )}
-      <Button onPress={handlePressReset}>Reset</Button>
-          <Svg viewBox="0 0 400 400" width="100%" height="100%">
+    </Card>
+
+      
+    </View>
+  )
+}
+
+const DiffAmountSection = ({pieChartData,theme,diffAmountPercent,totalAmount}) => {
+  return(
+    <View style={{marginTop:-20}}>
+      <Svg viewBox="0 0 400 400" width="100%" /*height="100%"*/>
         <VictoryPie
             // width={250} height={250}
             data={pieChartData}
@@ -96,41 +135,21 @@ const HomeScreen = ({route,...props}) => {
 
           <VictoryLabel
           textAnchor="middle"
-          style={{ fontSize: 40,fill:'white',fontWeight:'bold' }}
-          x={200} y={90}
+          style={{ fontSize: 56,fill:'white',fontWeight:'bold' }}
+          x={200} y={180}
           text={`${diffAmountPercent}%`}
         />
-          </Svg>
-          {/* <CustomLabel role="label"/> */}
- 
-      
-    </Layout>
 
-  )
-}
-
-const CustomLabel = () => {
-  return (
-<VictoryLabel
+        <VictoryLabel
           textAnchor="middle"
-          style={{ fontSize: 30,data: {
-            fill: () => {
-              return 'red'
-            }
-          } }}
-          x={200} y={200}
-          text="Lorem ipsum dolor sit amet"
+          style={{ fontSize: 23,fill:'white'}}
+          x={200} y={240}
+          text={`${totalAmount}gr consumed`}
         />
+        
+          </Svg>
+    </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // justifyContent: "center",
-    alignItems: "center",
-    // backgroundColor: "#f5fcff"
-  }
-});
 
 export default HomeScreen;
