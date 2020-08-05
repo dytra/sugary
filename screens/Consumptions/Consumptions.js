@@ -1,13 +1,27 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNavigationAction, Icon, useTheme } from "@ui-kitten/components"
 import TotalAmountContext from "../../contexts/TotalAmountContext";
 const Consumptions = ({ navigation, state, route, ...props }) => {
   const { consumptions, setConsumptions, totalAmount, setTotalAmount } = route.params;
   const globalTotalAmount = useContext(TotalAmountContext);
+  const theme = useTheme();
   const renderItem = ({ item, index }) => {
+    // <ListItem key={index} title={`${item.amount}gr`} style={{ paddingTop: 20, paddingBottom: 20 }} />
+    const dateString = new Date(item?.createdDate);
+    const timeString = `${dateString.getHours()}:${dateString.getMinutes()}`
     return (
-      <ListItem key={index} title={`${item.amount}gr`} style={{ paddingTop: 20, paddingBottom: 20 }} /*description={`${item.amount}gr`}*/ />
+      <ListItem key={index} style={{ height: 60 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <View style={{ flex: 1 }}>
+            <Icon fill={theme['text-basic-color']} name='droplet-outline' />
+          </View>
+          <View style={{ flex: 6, justifyContent: 'center' }}>
+            <Text style={{ fontSize: 9 }}>Today at {timeString}</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.amount}gr</Text>
+          </View>
+        </View>
+      </ListItem>
     )
   }
 
@@ -83,6 +97,7 @@ const styles = StyleSheet.create({
   container: {
     minHeight: 100,
     maxHeight: 250,
+    overflow: 'scroll',
     width: '100%',
     // backgroundColor: 'blue',
   },
