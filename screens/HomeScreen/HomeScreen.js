@@ -13,7 +13,7 @@ const HomeScreen = ({route,...props}) => {
   const [maxAmount,setMaxAmount] = useState(36);
   const [pieChartData,setPieChartData] = useState([{ x: 1, y: 0 }, { x: 2, y: 100 - 100 }]);
   const theme = useTheme();
-
+  
   const handlePressReset = () => {
     // setConsumptions([]);
     if(route.params?.setConsumptions) {
@@ -71,13 +71,13 @@ const HomeScreen = ({route,...props}) => {
       {/* <Text>Total Amount of Consumptions Today : {totalAmount}gr</Text>
       <Text>Available Glucose to user: {diffAmount}gr</Text> */}
       
-      <Text style={{fontSize:11,textAlign:'center',fontWeight:'bold',color:theme['color-primary-300'],marginBottom:6,marginTop:13}}>DAILY CONSUMPTION</Text>
+      <Text style={{fontSize:11,textAlign:'center',fontWeight:'bold',color:theme['color-primary-300'],marginBottom:6,marginTop:20}}>DAILY CONSUMPTION</Text>
       <Text style={{fontSize:20,textAlign:'center'}}>You have consumed</Text>
       <Text style={{fontSize:20,textAlign:'center'}}>
         <Text style={{fontSize:20,fontWeight:'bold',color:theme['color-primary-400']}}>{diffAmountPercent}%</Text> of your daily consumption</Text>
       <DiffAmountSection pieChartData={pieChartData} theme={theme} diffAmountPercent={diffAmountPercent} totalAmount={totalAmount}/>
 
-      <InfoBox totalAmount={totalAmount} maxAmount={maxAmount}/>
+      <InfoBox totalAmount={totalAmount} maxAmount={maxAmount} theme={theme} />
 
       <Button onPress={handlePressReset} style={{alignSelf:'center'}}>Reset</Button>
  
@@ -88,7 +88,7 @@ const HomeScreen = ({route,...props}) => {
   )
 }
 
-const InfoBox = ({totalAmount,maxAmount}) => {
+const InfoBox = ({totalAmount,maxAmount,theme}) => {
   return(
     <View style={{marginBottom:10}}>
     <Card /*status='warning'*/ style={{marginLeft:10,marginRight:10}}>
@@ -97,10 +97,10 @@ const InfoBox = ({totalAmount,maxAmount}) => {
       )}
       {totalAmount < maxAmount && (
         <View style={{flexDirection:'row'}}>
-            <Icon fill='white'style={{width: 32,
+            <Icon fill={theme['text-basic-color']} style={{width: 32,
               height: 32,marginRight:5}} name='droplet-outline'/>
           <View style={{justifyContent:'center'}}>
-            <Text>You're fine for now</Text>
+            <Text>You're fine for now, I think 😝</Text>
 
           </View>
         </View>
@@ -119,7 +119,7 @@ const DiffAmountSection = ({pieChartData,theme,diffAmountPercent,totalAmount}) =
         <VictoryPie
             // width={250} height={250}
             data={pieChartData}
-            innerRadius={100}
+            innerRadius={130}
             cornerRadius={25}
             labels={() => null}
             style={{
@@ -135,14 +135,14 @@ const DiffAmountSection = ({pieChartData,theme,diffAmountPercent,totalAmount}) =
 
           <VictoryLabel
           textAnchor="middle"
-          style={{ fontSize: 56,fill:'white',fontWeight:'bold' }}
+          style={{ fontSize: 56,fill:theme['text-basic-color'],fontWeight:'bold' }}
           x={200} y={180}
           text={`${diffAmountPercent}%`}
         />
 
         <VictoryLabel
           textAnchor="middle"
-          style={{ fontSize: 23,fill:'white'}}
+          style={{ fontSize: 23,fill:theme['text-basic-color']}}
           x={200} y={240}
           text={`${totalAmount}gr consumed`}
         />
