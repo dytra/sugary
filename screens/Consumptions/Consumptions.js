@@ -94,7 +94,6 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
 
   useEffect(() => {
     if (consumptions?.length > 0 && localConsumptions?.length === 0) {
-      Alert.alert("yolo");
       setLocalConsumptions(consumptions);
     }
   }, [consumptions]);
