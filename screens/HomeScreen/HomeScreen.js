@@ -4,6 +4,7 @@ import ConsumptionsContext from "../../contexts/ConsumptionsContext";
 import Svg from "react-native-svg";
 import { StyleSheet, ScrollView,View } from "react-native";
 import { VictoryBar, VictoryChart, VictoryTheme,VictoryPie,VictoryAnimation,VictoryLabel,VictoryScatter } from "victory-native";
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HomeScreen = ({route,...props}) => {
   const consumptions = useContext(ConsumptionsContext);
@@ -14,10 +15,15 @@ const HomeScreen = ({route,...props}) => {
   const [pieChartData,setPieChartData] = useState([{ x: 1, y: 0 }, { x: 2, y: 100 - 100 }]);
   const theme = useTheme();
   
-  const handlePressReset = () => {
+  const handlePressReset = async () => {
     // setConsumptions([]);
     if(route.params?.setConsumptions) {
       route.params.setConsumptions([]);
+      try {
+        await AsyncStorage.removeItem('consumptions');
+      } catch (e) {
+        console.log('error on delete',e);
+      }
     }
   }
   // useEffect(() => {

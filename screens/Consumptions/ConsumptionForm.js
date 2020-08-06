@@ -12,8 +12,8 @@ const ConsumptionForm = ({ route, navigation }) => {
     const newConsumptions = [
       ...consumptions,
       {
-        id: consumptions.length + 1,
-        createdDate: Date.now(),
+        id: `${Date.now()}`,
+        createdDate: `${Date.now()}`,
         type: 'glucose',
         amount: parseInt(value),
       }
