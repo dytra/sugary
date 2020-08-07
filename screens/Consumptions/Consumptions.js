@@ -3,12 +3,14 @@ import { StyleSheet, View, Alert } from 'react-native';
 import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNavigationAction, Icon, useTheme } from "@ui-kitten/components"
 import TotalAmountContext from "../../contexts/TotalAmountContext";
 import AsyncStorage from '@react-native-community/async-storage';
+import ConsumptionsContext from "../../contexts/ConsumptionsContext";
 
 const Consumptions = ({ navigation, state, route, ...props }) => {
   const { consumptions, setConsumptions, totalAmount, setTotalAmount } = route.params;
   const [localConsumptions, setLocalConsumptions] = useState([]);
   const globalTotalAmount = useContext(TotalAmountContext);
   const theme = useTheme();
+  const consumptionsCtx = useContext(ConsumptionsContext);
 
   const handlePressRemove = (id) => {
     Alert.alert("Delete Confirmation", "Are you sure you wanna remove this item?", [
@@ -19,13 +21,13 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
       {
         text: "Yes",
         onPress: async () => {
-          const newConsumptions =  localConsumptions.filter(item => {
+          const newConsumptions = consumptionsCtx.filter(item => {
             return item?.id !== id;
           })
-          setLocalConsumptions(newConsumptions);
+          // setLocalConsumptions(newConsumptions);
           setConsumptions(newConsumptions);
           await storeData(JSON.stringify(newConsumptions));
-          
+
         }
       },
     ]);
@@ -36,13 +38,13 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
       await AsyncStorage.setItem('consumptions', value);
       console.log('success saving data to async storage');
     } catch (e) {
-      console.log('error saving consumption data',e);
+      console.log('error saving consumption data', e);
     }
   }
   const renderItem = ({ item, index }) => {
     // <ListItem key={index} title={`${item.amount}gr`} style={{ paddingTop: 20, paddingBottom: 20 }} />
     const dateString = new Date(parseInt(item?.createdDate));
-    
+
     const timeString = `${dateString.getHours()}:${dateString.getMinutes()}`
     return (
       <ListItem key={item?.id} style={{ height: 60 }}>
@@ -76,8 +78,9 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
 
   const TopNavigationSimpleUsageShowcase = () => (
     <TopNavigation
-      accessoryLeft={BackAction}
-      title='Eva Application'
+      /* accessoryLeft={BackAction}*/
+      title='Consumptions'
+      alignment='center'
     />
   );
 
@@ -92,11 +95,16 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
     });
   }
 
-  useEffect(() => {
-    if (consumptions?.length > 0 && localConsumptions?.length === 0) {
-      setLocalConsumptions(consumptions);
-    }
-  }, [consumptions]);
+  // useEffect(() => {
+  //   if (consumptions?.length > 0 && localConsumptions?.length === 0) {
+  //     setLocalConsumptions(consumptions);
+  //   }
+  // }, [consumptions]);
+
+  // useEffect(() => {
+  //   console.log('consumptins context');
+  //   console.log(consumptionsCtx);
+  // }, [consumptionsCtx]);
 
 
   useEffect(() => {
@@ -104,11 +112,11 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
       const total = await countTotalAmount(consumptions);
       setTotalAmount(total);
     }
-    if (consumptions && consumptions?.length > 0) {
+    if (consumptionsCtx && consumptionsCtx?.length > 0) {
       start();
     }
 
-  }, [consumptions]);
+  }, [consumptionsCtx]);
 
 
 
@@ -119,23 +127,27 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
   //   />
   // );
 
+
   return (
     <>
       <TopNavigationSimpleUsageShowcase />
       <Layout style={{ flex: 1, /*justifyContent: 'center',*/ alignItems: 'center', /*paddingTop: 25*/ }}>
-        <Text category='h2'>Consumptions</Text>
-        <Text style={{ marginBottom: 5 }}>Total Consumptions Today: {globalTotalAmount}gr</Text>
+        {/* <Text category='h2'>Consumptions</Text> */}
+        <View style={{ paddingBottom: 10 /*borderBottomColor: theme['color-primary-900']*/, borderBottomWidth: 1, width: '100%' }}>
+          <Text style={{ marginBottom: 5,textAlign:'center' }}>Total Consumptions Today: {globalTotalAmount}gr</Text>
         <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
-          consumptions: localConsumptions,
-          setConsumptions: setLocalConsumptions,
-        })}>Add</Button>
-        <List
-          style={styles.container}
-          data={localConsumptions}
-          renderItem={renderItem}
-          ItemSeparatorComponent={Divider}
-        />
-      </Layout>
+          consumptions: consumptionsCtx,
+          setConsumptions: setConsumptions,
+          // setConsumptions: setLocalConsumptions,
+        })} style={{alignSelf:'center'}}>Add</Button>
+        </View>
+      <List
+        style={styles.container}
+        data={consumptionsCtx}
+        renderItem={renderItem}
+        ItemSeparatorComponent={Divider}
+      />
+    </Layout>
     </>
   )
 }
@@ -143,7 +155,7 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
 const styles = StyleSheet.create({
   container: {
     minHeight: 100,
-    maxHeight: 250,
+    // maxHeight: 250,
     overflow: 'scroll',
     width: '100%',
     // backgroundColor: 'blue',

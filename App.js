@@ -40,8 +40,8 @@ export default function App() {
         const value = await AsyncStorage.getItem('consumptions');
         if (value !== null) {
           // value previously stored
-          console.log('init consumptions data');
-          console.log(value);
+          // console.log('init consumptions data');
+          // console.log(value);
           setConsumptions(JSON.parse(value));
         }
       } catch (e) {
