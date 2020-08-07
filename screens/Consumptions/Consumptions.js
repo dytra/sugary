@@ -167,7 +167,7 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
     }
     setFilteredConsumptions(filteredConsumptions);
     // setConsumptions(filteredConsumptions);
-    console.log('filteredConsumptions', filteredConsumptions);
+    // console.log('filteredConsumptions', filteredConsumptions);
 
   }, [datePeriod, consumptionsCtx]);
 
