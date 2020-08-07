@@ -4,13 +4,28 @@ import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNaviga
 import TotalAmountContext from "../../contexts/TotalAmountContext";
 import AsyncStorage from '@react-native-community/async-storage';
 import ConsumptionsContext from "../../contexts/ConsumptionsContext";
+import { subDays, differenceInDays, format } from "date-fns";
 
 const Consumptions = ({ navigation, state, route, ...props }) => {
   const { consumptions, setConsumptions, totalAmount, setTotalAmount } = route.params;
   const [localConsumptions, setLocalConsumptions] = useState([]);
+  const [filteredConsumptions, setFilteredConsumptions] = useState([]);
+  const [datePeriod, setDatePeriod] = useState('Today');
   const globalTotalAmount = useContext(TotalAmountContext);
   const theme = useTheme();
   const consumptionsCtx = useContext(ConsumptionsContext);
+
+  const toggleDatePeriod = () => {
+    if (datePeriod === "Today") {
+      setDatePeriod('7 Days')
+    } else {
+      setDatePeriod('Today');
+    }
+  }
+
+  const handlePressButtonDatePeriod = () => {
+    toggleDatePeriod();
+  }
 
   const handlePressRemove = (id) => {
     Alert.alert("Delete Confirmation", "Are you sure you wanna remove this item?", [
@@ -46,6 +61,7 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
     const dateString = new Date(parseInt(item?.createdDate));
 
     const timeString = `${dateString.getHours()}:${dateString.getMinutes()}`
+    const fullDateString = format(dateString, 'dd MMM yyyy HH:mm');
     return (
       <ListItem key={item?.id} style={{ height: 60 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -53,7 +69,13 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
             <Icon fill={theme['text-basic-color']} name='droplet-outline' />
           </View>
           <View style={{ flex: 6, justifyContent: 'center' }}>
-            <Text style={{ fontSize: 9 }}>Today at {timeString}</Text>
+            {(datePeriod === "Today") && (
+              <Text style={{ fontSize: 9 }}>Today at {timeString}</Text>
+            )}
+            {(datePeriod !== "Today") && (
+              <Text style={{ fontSize: 9 }}>{fullDateString}</Text>
+
+            )}
             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.amount}gr</Text>
           </View>
           <View style={{ flex: 2 }}>
@@ -75,10 +97,18 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
     <TopNavigationAction icon={BackIcon} />
   );
 
+  const DatePicker = () => {
+    return (
+      <Button onPress={handlePressButtonDatePeriod}>{datePeriod}</Button>
+
+    )
+  }
+
 
   const TopNavigationSimpleUsageShowcase = () => (
     <TopNavigation
       /* accessoryLeft={BackAction}*/
+      accessoryRight={DatePicker}
       title='Consumptions'
       alignment='center'
     />
@@ -118,6 +148,28 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
 
   }, [consumptionsCtx]);
 
+  useEffect(() => {
+    let filteredConsumptions;
+    if (datePeriod === "7 Days") {
+      const last7Days = subDays(new Date(), 7);
+
+      // console.log('diffDay ;', diffDay);
+      filteredConsumptions = consumptionsCtx.filter(item => {
+        const diffDay = differenceInDays(new Date(parseInt(item?.createdDate)), new Date(last7Days));
+        return diffDay <= 7;
+      });
+    } else if (datePeriod === "Today") {
+      filteredConsumptions = consumptionsCtx.filter(item => {
+        // console.log(item);
+        const inToday = new Date(parseInt(item?.createdDate))?.toDateString() === new Date().toDateString();
+        return inToday;
+      })
+    }
+    setFilteredConsumptions(filteredConsumptions);
+    // setConsumptions(filteredConsumptions);
+    console.log('filteredConsumptions', filteredConsumptions);
+
+  }, [datePeriod, consumptionsCtx]);
 
 
   // const TopNavigationStyling = () => (
@@ -134,20 +186,20 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
       <Layout style={{ flex: 1, /*justifyContent: 'center',*/ alignItems: 'center', /*paddingTop: 25*/ }}>
         {/* <Text category='h2'>Consumptions</Text> */}
         <View style={{ paddingBottom: 10 /*borderBottomColor: theme['color-primary-900']*/, borderBottomWidth: 1, width: '100%' }}>
-          <Text style={{ marginBottom: 5,textAlign:'center' }}>Total Consumptions Today: {globalTotalAmount}gr</Text>
-        <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
-          consumptions: consumptionsCtx,
-          setConsumptions: setConsumptions,
-          // setConsumptions: setLocalConsumptions,
-        })} style={{alignSelf:'center'}}>Add</Button>
+          <Text style={{ marginBottom: 5, textAlign: 'center' }}>Total Consumptions Today: {globalTotalAmount}gr</Text>
+          <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
+            consumptions: consumptionsCtx,
+            setConsumptions: setConsumptions,
+            // setConsumptions: setLocalConsumptions,
+          })} style={{ alignSelf: 'center' }}>Add</Button>
         </View>
-      <List
-        style={styles.container}
-        data={consumptionsCtx}
-        renderItem={renderItem}
-        ItemSeparatorComponent={Divider}
-      />
-    </Layout>
+        <List
+          style={styles.container}
+          data={filteredConsumptions}
+          renderItem={renderItem}
+          ItemSeparatorComponent={Divider}
+        />
+      </Layout>
     </>
   )
 }
