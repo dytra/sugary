@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Layout, BottomNavigation, BottomNavigationTab, Text, useTheme, Icon } from '@ui-kitten/components';
 import { Consumptions, ConsumptionForm, HomeScreen } from "../../screens";
 import { SafeAreaView } from "react-native";
-
+import OnboardingScreen from "../../screens/OnboardingScreen/OnboardingScreen";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -21,8 +21,8 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
   )
   return (
     <BottomNavigation
-      test="yolo"
-      selectedIndex={state.index === 2 ? 1 : state.index}
+      // selectedIndex={state.index === 2 ? 1 : state.index}
+      selectedIndex={state.index}
       onSelect={index => navigation.navigate(state.routeNames[index], {
         consumptions: props.consumptions,
         setConsumptions: props.setConsumptions,
@@ -33,6 +33,7 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
       )}>
       <BottomNavigationTab title='Home' icon={HomeIcon} />
       <BottomNavigationTab title='Consumptions' icon={FileIcon} />
+      {/* <BottomNavigationTab title='Consumptions' icon={FileIcon} /> */}
     </BottomNavigation>
 
   )
@@ -47,6 +48,7 @@ const TabNavigator = ({ consumptions, setConsumptions, totalAmount, setTotalAmou
         <Screen name='Users' component={HomeScreen} />
         <Screen name='Consumptions' component={Consumptions} />
         <Screen name='Add Consumption' component={ConsumptionForm} />
+        {/* <Screen name='Onboarding' component={OnboardingScreen} /> */}
       </Navigator>
     </SafeAreaView>
   )

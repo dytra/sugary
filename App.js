@@ -12,7 +12,7 @@ import { ModelConsumptions } from "./models";
 import AsyncStorage from '@react-native-community/async-storage';
 import TotalAmountContext from "./contexts/TotalAmountContext";
 import ConsumptionsContext from "./contexts/ConsumptionsContext";
-
+import OnboardingScreen from "./screens/OnboardingScreen/OnboardingScreen";
 export default function App() {
   const [consumptions, setConsumptions] = useState([{
     id: 1,
@@ -26,6 +26,7 @@ export default function App() {
     type: 'glucose',
   }]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [showOnboardingScreen, setShowOnboardingScreen] = useState(true);
 
   YellowBox.ignoreWarnings([
     'Non-serializable values were found in the navigation state',
@@ -61,7 +62,14 @@ export default function App() {
           <NavigationContainer>
             <IconRegistry icons={EvaIconsPack} />
             {/* <SafeAreaView> */}
-            <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
+            {showOnboardingScreen && (
+              <OnboardingScreen setShowOnboardingScreen={setShowOnboardingScreen} />
+
+            )}
+            {!showOnboardingScreen && (
+              <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
+
+            )}
             {/* </SafeAreaView> */}
 
           </NavigationContainer>

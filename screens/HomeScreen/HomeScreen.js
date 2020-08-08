@@ -6,7 +6,7 @@ import { StyleSheet, ScrollView,View } from "react-native";
 import { VictoryBar, VictoryChart, VictoryTheme,VictoryPie,VictoryAnimation,VictoryLabel,VictoryScatter } from "victory-native";
 import AsyncStorage from '@react-native-community/async-storage';
 
-const HomeScreen = ({route,...props}) => {
+const HomeScreen = ({route,navigation,...props}) => {
   const consumptions = useContext(ConsumptionsContext);
   const [totalAmount, setTotalAmount] = useState(0);
   const [diffAmount, setDiffAmount] = useState(0);
@@ -65,6 +65,10 @@ const HomeScreen = ({route,...props}) => {
     const data = getData(diffAmountPercent);
     setPieChartData(data);
   },[diffAmountPercent]);
+
+  // useEffect(() => {
+  //   navigation.navigate('Onboarding');
+  // },[]);
 
   const  getData = (percent) => {
     return [{ x: 1, y: percent }, { x: 2, y: 100 - percent }];
