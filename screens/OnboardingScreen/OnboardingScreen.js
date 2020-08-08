@@ -3,8 +3,9 @@ import { StyleSheet, View, Button } from 'react-native';
 import { Layout, Text, ViewPager, } from '@ui-kitten/components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-community/async-storage';
+import { countAge } from "../../utils/coreutils";
 
-const OnboardingScreen = ({ setShowOnboardingScreen }) => {
+const OnboardingScreen = ({ setShowOnboardingScreen, setMaxGlucoseAmount, setAge }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
@@ -30,13 +31,35 @@ const OnboardingScreen = ({ setShowOnboardingScreen }) => {
   };
 
   const handlePressConfirm = () => {
-    storeData(`${date}`);
+    // const age = countAge(date);
+    /* save data to userInfo storage */
+    const userInfo = {
+      birth_date: `${date}`
+    }
+
+    storeData('user_info', JSON.stringify(userInfo));
     setShowOnboardingScreen(false);
   }
 
-  const storeData = async (value) => {
+  async function getData(key) {
     try {
-      await AsyncStorage.setItem('birth_date', value);
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null) {
+        // value previously stored
+        // console.log('init consumptions data');
+        // console.log(value);
+        setConsumptions(JSON.parse(value));
+      }
+    } catch (e) {
+      // error reading value
+      console.log(e);
+    }
+    // await AsyncStorage.clear();
+  }
+
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
       console.log('success saving birth_date to async storage');
     } catch (e) {
       console.log('error saving birth_date data');

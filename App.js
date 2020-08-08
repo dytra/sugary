@@ -12,7 +12,9 @@ import { ModelConsumptions } from "./models";
 import AsyncStorage from '@react-native-community/async-storage';
 import TotalAmountContext from "./contexts/TotalAmountContext";
 import ConsumptionsContext from "./contexts/ConsumptionsContext";
+import UserInfoContext from "./contexts/ConsumptionsContext";
 import OnboardingScreen from "./screens/OnboardingScreen/OnboardingScreen";
+import { countAge } from './utils/coreutils';
 export default function App() {
   const [consumptions, setConsumptions] = useState([{
     id: 1,
@@ -26,7 +28,10 @@ export default function App() {
     type: 'glucose',
   }]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [showOnboardingScreen, setShowOnboardingScreen] = useState(true);
+  const [showOnboardingScreen, setShowOnboardingScreen] = useState(false);
+  const [maxGlucoseAmount, setMaxGlucoseAmount] = useState(33);
+  const [userInfo, setUserInfo] = useState();
+  const [age, setAge] = useState();
 
   YellowBox.ignoreWarnings([
     'Non-serializable values were found in the navigation state',
@@ -55,27 +60,54 @@ export default function App() {
 
   }, []);
 
+  useEffect(() => {
+    async function start() {
+      const userInfoString = await getData('user_info');
+      if (!userInfoString) return;
+      const userInfo = JSON.parse(userInfoString);
+      const birthDate = userInfo?.birth_date;
+      if (!birthDate) return;
+      const age = countAge(new Date(birthDate));
+      setAge(age);
+
+    }
+    start();
+  }, [])
+
+  async function getData(key) {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      return value;
+    } catch (e) {
+      // error reading value
+      console.log(e);
+    }
+    // await AsyncStorage.clear();
+  }
+
   return (
-    <ConsumptionsContext.Provider value={consumptions}>
-      <TotalAmountContext.Provider value={totalAmount}>
-        <ApplicationProvider {...eva} theme={eva.dark}>
-          <NavigationContainer>
-            <IconRegistry icons={EvaIconsPack} />
-            {/* <SafeAreaView> */}
-            {showOnboardingScreen && (
-              <OnboardingScreen setShowOnboardingScreen={setShowOnboardingScreen} />
+    <UserInfoContext.Provider value={userInfo}>
+      <ConsumptionsContext.Provider value={consumptions}>
+        <TotalAmountContext.Provider value={totalAmount}>
+          <ApplicationProvider {...eva} theme={eva.dark}>
+            <NavigationContainer>
+              <IconRegistry icons={EvaIconsPack} />
+              {/* <SafeAreaView> */}
+              {showOnboardingScreen && (
+                <OnboardingScreen setShowOnboardingScreen={setShowOnboardingScreen} setMaxGlucoseAmount={setMaxGlucoseAmount} setAge={setAge} />
 
-            )}
-            {!showOnboardingScreen && (
-              <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
+              )}
+              {!showOnboardingScreen && (
+                <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
 
-            )}
-            {/* </SafeAreaView> */}
+              )}
+              {/* </SafeAreaView> */}
 
-          </NavigationContainer>
-        </ApplicationProvider>
-      </TotalAmountContext.Provider>
-    </ConsumptionsContext.Provider>
+            </NavigationContainer>
+          </ApplicationProvider>
+        </TotalAmountContext.Provider>
+      </ConsumptionsContext.Provider>
+    </UserInfoContext.Provider>
   );
 }
 
