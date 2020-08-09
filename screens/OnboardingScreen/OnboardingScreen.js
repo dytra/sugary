@@ -3,7 +3,7 @@ import { StyleSheet, View, Button } from 'react-native';
 import { Layout, Text, ViewPager, } from '@ui-kitten/components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-community/async-storage';
-import { countAge } from "../../utils/coreutils";
+import { countAge, getAmountGlucoseByAge } from "../../utils/coreutils";
 
 const OnboardingScreen = ({ setShowOnboardingScreen, setMaxGlucoseAmount, setAge }) => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -30,12 +30,13 @@ const OnboardingScreen = ({ setShowOnboardingScreen, setMaxGlucoseAmount, setAge
     showMode('time');
   };
 
-  const handlePressConfirm = () => {
-    // const age = countAge(date);
+  const handlePressConfirm = async () => {
     /* save data to userInfo storage */
     const userInfo = {
       birth_date: `${date}`
     }
+    const age = countAge(date);
+    const amountGlucose = await getAmountGlucoseByAge(age);
 
     storeData('user_info', JSON.stringify(userInfo));
     setShowOnboardingScreen(false);

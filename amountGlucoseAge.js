@@ -73,3 +73,5 @@ const data = [
   //   amountMax:51,
   // }
 ];
+
+export default data;
