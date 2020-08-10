@@ -12,7 +12,7 @@ import { ModelConsumptions } from "./models";
 import AsyncStorage from '@react-native-community/async-storage';
 import TotalAmountContext from "./contexts/TotalAmountContext";
 import ConsumptionsContext from "./contexts/ConsumptionsContext";
-import UserInfoContext from "./contexts/ConsumptionsContext";
+import UserInfoContext from "./contexts/UserInfoContext";
 import OnboardingScreen from "./screens/OnboardingScreen/OnboardingScreen";
 import { countAge } from './utils/coreutils';
 export default function App() {
@@ -28,7 +28,7 @@ export default function App() {
     type: 'glucose',
   }]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [showOnboardingScreen, setShowOnboardingScreen] = useState(false);
+  const [showOnboardingScreen, setShowOnboardingScreen] = useState(true);
   const [maxGlucoseAmount, setMaxGlucoseAmount] = useState(33);
   const [userInfo, setUserInfo] = useState();
   const [age, setAge] = useState();
@@ -60,19 +60,26 @@ export default function App() {
 
   }, []);
 
+  // useEffect(() => {
+
+  // },[]);
+
   useEffect(() => {
     async function start() {
       const userInfoString = await getData('user_info');
       if (!userInfoString) return;
       const userInfo = JSON.parse(userInfoString);
-      const birthDate = userInfo?.birth_date;
-      if (!birthDate) return;
-      const age = countAge(new Date(birthDate));
-      setAge(age);
+      if (userInfo) {
+        setUserInfo(userInfo);
+      }
+      // const birthDate = userInfo?.birth_date;
+      // if (!birthDate) return;
+      // const age = countAge(new Date(birthDate));
+      // setAge(age);
 
     }
     start();
-  }, [])
+  }, [userInfo])
 
   async function getData(key) {
     try {

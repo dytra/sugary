@@ -36,7 +36,7 @@ const OnboardingScreen = ({ setShowOnboardingScreen, setMaxGlucoseAmount, setAge
       birth_date: `${date}`
     }
     const age = countAge(date);
-    const amountGlucose = await getAmountGlucoseByAge(age);
+    // const amountGlucose = await getAmountGlucoseByAge(age);
 
     storeData('user_info', JSON.stringify(userInfo));
     setShowOnboardingScreen(false);

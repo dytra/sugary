@@ -1,20 +1,23 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Layout, Text,Button,useTheme,Card,Icon } from "@ui-kitten/components";
 import ConsumptionsContext from "../../contexts/ConsumptionsContext";
+import UserInfoContext from "../../contexts/UserInfoContext";
 import Svg from "react-native-svg";
-import { StyleSheet, ScrollView,View } from "react-native";
+import { StyleSheet, ScrollView,View,Alert } from "react-native";
 import { VictoryBar, VictoryChart, VictoryTheme,VictoryPie,VictoryAnimation,VictoryLabel,VictoryScatter } from "victory-native";
+import {countAge,getAmountGlucoseByAge} from "../../utils/coreutils";
 import AsyncStorage from '@react-native-community/async-storage';
 
 const HomeScreen = ({route,navigation,...props}) => {
   const consumptions = useContext(ConsumptionsContext);
+  const userInfo = useContext(UserInfoContext);
   const [totalAmount, setTotalAmount] = useState(0);
   const [diffAmount, setDiffAmount] = useState(0);
   const [diffAmountPercent, setDiffAmountPercent] = useState(0);
   const [maxAmount,setMaxAmount] = useState(36);
+  const [maxAmountGlucose,setMaxAmountGlucose] = useState(33);
   const [pieChartData,setPieChartData] = useState([{ x: 1, y: 0 }, { x: 2, y: 100 - 100 }]);
   const theme = useTheme();
-  
   const handlePressReset = async () => {
     // setConsumptions([]);
     if(route.params?.setConsumptions) {
@@ -49,22 +52,39 @@ const HomeScreen = ({route,navigation,...props}) => {
   // },[consumptions]);
 
   useEffect(() => {
-    if (!totalAmount){
+    if (!totalAmount || !maxAmountGlucose){
       setDiffAmount(0);
 
     } else {
-      const diff = maxAmount - totalAmount;
+      const diff = maxAmountGlucose - totalAmount;
       setDiffAmount(diff);
-      const percent = 100 - Math.round(diff/maxAmount*100);
+      const percent = 100 - Math.round(diff/maxAmountGlucose*100);
       setDiffAmountPercent(percent);
     }
 
-  }, [totalAmount,totalAmount]);
+  }, [totalAmount,maxAmountGlucose]);
 
   useEffect(() => {
     const data = getData(diffAmountPercent);
     setPieChartData(data);
   },[diffAmountPercent]);
+
+  useEffect(() => {
+    async function start() {
+      const birth_date = userInfo?.birth_date;
+      console.log("birth_date is",birth_date);
+      const age = countAge(new Date(birth_date));
+      console.log('age is',age);
+      const selectedRow = await getAmountGlucoseByAge(age);
+      const amountMax = selectedRow.amountMax;
+      console.log("amount max is",amountMax);
+      setMaxAmountGlucose(amountMax);
+    }
+    if(userInfo?.birth_date) {
+      start();
+    } 
+  },[]);
+
 
   // useEffect(() => {
   //   navigation.navigate('Onboarding');
@@ -87,7 +107,7 @@ const HomeScreen = ({route,navigation,...props}) => {
         <Text style={{fontSize:20,fontWeight:'bold',color:theme['color-primary-400']}}>{diffAmountPercent}%</Text> of your daily consumption</Text>
       <DiffAmountSection pieChartData={pieChartData} theme={theme} diffAmountPercent={diffAmountPercent} totalAmount={totalAmount}/>
 
-      <InfoBox totalAmount={totalAmount} maxAmount={maxAmount} theme={theme} />
+      <InfoBox totalAmount={totalAmount} maxAmount={maxAmountGlucose} theme={theme} />
 
       <Button onPress={handlePressReset} style={{alignSelf:'center'}}>Reset</Button>
  

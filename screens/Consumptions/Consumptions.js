@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, View, Alert } from 'react-native';
+import { StyleSheet, View, Alert, Button as RNButton } from 'react-native';
 import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNavigationAction, Icon, useTheme } from "@ui-kitten/components"
 import TotalAmountContext from "../../contexts/TotalAmountContext";
 import AsyncStorage from '@react-native-community/async-storage';
@@ -16,6 +16,7 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
   const consumptionsCtx = useContext(ConsumptionsContext);
 
   const toggleDatePeriod = () => {
+
     if (datePeriod === "Today") {
       setDatePeriod('7 Days')
     } else {
@@ -99,6 +100,7 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
 
   const DatePicker = () => {
     return (
+      // <RNButton title="Click"></RNButton>
       <Button onPress={handlePressButtonDatePeriod}>{datePeriod}</Button>
 
     )
@@ -107,7 +109,8 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
 
   const TopNavigationSimpleUsageShowcase = () => (
     <TopNavigation
-      /* accessoryLeft={BackAction}*/
+      accessoryLeft={BackAction}
+      // accessoryRight={DatePicker}
       accessoryRight={DatePicker}
       title='Consumptions'
       alignment='center'
@@ -183,14 +186,12 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
   return (
     <>
       <TopNavigationSimpleUsageShowcase />
-      <Layout style={{ flex: 1, /*justifyContent: 'center',*/ alignItems: 'center', /*paddingTop: 25*/ }}>
-        {/* <Text category='h2'>Consumptions</Text> */}
-        <View style={{ paddingBottom: 10 /*borderBottomColor: theme['color-primary-900']*/, borderBottomWidth: 1, width: '100%' }}>
+      <Layout style={{ flex: 1, alignItems: 'center', }}>
+        <View style={{ paddingBottom: 10, borderBottomWidth: 1, width: '100%' }}>
           <Text style={{ marginBottom: 5, textAlign: 'center' }}>Total Consumptions Today: {globalTotalAmount}gr</Text>
           <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
             consumptions: consumptionsCtx,
             setConsumptions: setConsumptions,
-            // setConsumptions: setLocalConsumptions,
           })} style={{ alignSelf: 'center' }}>Add</Button>
         </View>
         <List
