@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Layout, Text,Button,useTheme,Card,Icon } from "@ui-kitten/components";
 import ConsumptionsContext from "../../contexts/ConsumptionsContext";
 import UserInfoContext from "../../contexts/UserInfoContext";
@@ -69,7 +69,7 @@ const HomeScreen = ({route,navigation,...props}) => {
     setPieChartData(data);
   },[diffAmountPercent]);
 
-  useEffect(() => {
+  const resetMaxAmountGlucose = useCallback(() => {
     async function start() {
       const birth_date = userInfo?.birth_date;
       console.log("birth_date is",birth_date);
@@ -78,12 +78,20 @@ const HomeScreen = ({route,navigation,...props}) => {
       const selectedRow = await getAmountGlucoseByAge(age);
       const amountMax = selectedRow.amountMax;
       console.log("amount max is",amountMax);
-      setMaxAmountGlucose(amountMax);
+      setMaxAmountGlucose(amountMax); 
+
+    }
+    start();
+  },[userInfo?.birth_date]);
+
+  useEffect(() => {
+    async function start() {
+      resetMaxAmountGlucose()
     }
     if(userInfo?.birth_date) {
       start();
     } 
-  },[]);
+  },[resetMaxAmountGlucose]);
 
 
   // useEffect(() => {
@@ -100,7 +108,7 @@ const HomeScreen = ({route,navigation,...props}) => {
       {/* <Text category='h1'>Home</Text> */}
       {/* <Text>Total Amount of Consumptions Today : {totalAmount}gr</Text>
       <Text>Available Glucose to user: {diffAmount}gr</Text> */}
-      
+      {/* <Text>max glucose {maxAmountGlucose}</Text>  */}
       <Text style={{fontSize:11,textAlign:'center',fontWeight:'bold',color:theme['color-primary-300'],marginBottom:6,marginTop:20}}>DAILY CONSUMPTION</Text>
       <Text style={{fontSize:20,textAlign:'center'}}>You have consumed</Text>
       <Text style={{fontSize:20,textAlign:'center'}}>

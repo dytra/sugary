@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Layout, BottomNavigation, BottomNavigationTab, Text, useTheme, Icon } from '@ui-kitten/components';
-import { Consumptions, ConsumptionForm, HomeScreen } from "../../screens";
+import { Consumptions, ConsumptionForm, HomeScreen, ProfileScreen } from "../../screens";
 import { SafeAreaView } from "react-native";
 import OnboardingScreen from "../../screens/OnboardingScreen/OnboardingScreen";
 
@@ -19,6 +19,10 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
   const FileIcon = (props) => (
     <Icon {...props} name='droplet-outline' />
   )
+
+  const ProfileIcon = (props) => (
+    <Icon {...props} name='person-outline' />
+  )
   return (
     <BottomNavigation
       // selectedIndex={state.index === 2 ? 1 : state.index}
@@ -28,25 +32,28 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
         setConsumptions: props.setConsumptions,
         totalAmount: props.totalAmount,
         setTotalAmount: props.setTotalAmount,
+        setUserInfo: props.setUserInfo,
         ...props
       }
       )}>
       <BottomNavigationTab title='Home' icon={HomeIcon} />
       <BottomNavigationTab title='Consumptions' icon={FileIcon} />
+      <BottomNavigationTab title='Profile' icon={ProfileIcon} />
       {/* <BottomNavigationTab title='Consumptions' icon={FileIcon} /> */}
     </BottomNavigation>
 
   )
 };
-const TabNavigator = ({ consumptions, setConsumptions, totalAmount, setTotalAmount }) => {
+const TabNavigator = ({ consumptions, setConsumptions, totalAmount, setTotalAmount, setUserInfo }) => {
   const theme = useTheme();
   // console.log('consumptions now hehe');
   // console.log(consumptions);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme['background-basic-color-1'] }}>
-      <Navigator initialRouteName='Users' tabBar={props => <BottomTabBar {...props} consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} /*handlePressSubmit={handlePressSubmit}*/ />} >
+      <Navigator initialRouteName='Users' tabBar={props => <BottomTabBar {...props} consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} setUserInfo={setUserInfo} /*handlePressSubmit={handlePressSubmit}*/ />} >
         <Screen name='Users' component={HomeScreen} />
         <Screen name='Consumptions' component={Consumptions} />
+        <Screen name='Profile' component={ProfileScreen} />
         <Screen name='Add Consumption' component={ConsumptionForm} />
         {/* <Screen name='Onboarding' component={OnboardingScreen} /> */}
       </Navigator>

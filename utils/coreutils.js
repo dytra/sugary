@@ -2,7 +2,7 @@ import moment from "moment";
 import amountGlucoseAge from "../amountGlucoseAge";
 export const countAge = (date) => {
   const age = moment().diff(date, 'years', true);
-  return age;
+  return Math.round(age);
 
   /*
   var a = moment([2008, 9]);

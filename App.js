@@ -28,7 +28,7 @@ export default function App() {
     type: 'glucose',
   }]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [showOnboardingScreen, setShowOnboardingScreen] = useState(true);
+  const [showOnboardingScreen, setShowOnboardingScreen] = useState(false);
   const [maxGlucoseAmount, setMaxGlucoseAmount] = useState(33);
   const [userInfo, setUserInfo] = useState();
   const [age, setAge] = useState();
@@ -105,7 +105,7 @@ export default function App() {
 
               )}
               {!showOnboardingScreen && (
-                <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} />
+                <TabNavigator consumptions={consumptions} setConsumptions={setConsumptions} totalAmount={totalAmount} setTotalAmount={setTotalAmount} setUserInfo={setUserInfo} />
 
               )}
               {/* </SafeAreaView> */}
