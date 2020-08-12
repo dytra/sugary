@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Layout, Text, Icon, Input, Datepicker } from "@ui-kitten/components";
-import { View } from "react-native";
+import { Layout, Text, Icon, Input, Datepicker, Button } from "@ui-kitten/components";
+import { View, Alert } from "react-native";
 import { subYears } from "date-fns";
 import AsyncStorage from '@react-native-community/async-storage';
 import UserInfoContext from "../../contexts/UserInfoContext";
@@ -23,11 +23,16 @@ const ProfileScreen = ({ route, ...props }) => {
   );
 
   const handleSelectDate = async nextDate => {
-    const newUserInfo = userInfo;
-    newUserInfo.birth_date = `${nextDate}`;
     setDate(nextDate);
+
+  }
+
+  const handleClickSave = async () => {
+    const newUserInfo = userInfo;
+    newUserInfo.birth_date = `${date}`;
     setUserInfo(newUserInfo);
     await storeData('user_info', JSON.stringify(newUserInfo));
+    Alert.alert("Success", "Data saved successfully");
   }
   const storeData = async (key, value) => {
     try {
@@ -67,6 +72,9 @@ const ProfileScreen = ({ route, ...props }) => {
       />
 
       {/* </View> */}
+      <View style={{ marginTop: 'auto', paddingVertical: 15, paddingHorizontal: 15 }}>
+        <Button onPress={handleClickSave}>Save</Button>
+      </View>
     </Layout>
   )
 }
