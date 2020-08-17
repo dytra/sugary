@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, View, Alert, Button as RNButton } from 'react-native';
-import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNavigationAction, Icon, useTheme } from "@ui-kitten/components"
+import { StyleSheet, View, Alert, TouchableOpacity } from 'react-native';
+import { Divider, Layout, Text, Button, List, ListItem, TopNavigation, TopNavigationAction, OverflowMenu, MenuItem, Icon, useTheme } from "@ui-kitten/components"
 import TotalAmountContext from "../../contexts/TotalAmountContext";
 import AsyncStorage from '@react-native-community/async-storage';
 import ConsumptionsContext from "../../contexts/ConsumptionsContext";
 import { subDays, differenceInDays, format } from "date-fns";
+import DatePeriodPicker from "./DatePeriodPicker";
+import CustomTopNavigation from "../../components/CustomTopNavigation/CustomTopNavigation";
 
 const Consumptions = ({ navigation, state, route, ...props }) => {
   const { consumptions, setConsumptions, totalAmount, setTotalAmount } = route.params;
@@ -95,23 +97,65 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
   );
 
   const BackAction = () => (
-    <TopNavigationAction icon={BackIcon} />
+    <TopNavigationAction icon={BackIcon} onPress={() => Alert.alert("yowasap", "huh")} />
   );
 
   const DatePicker = () => {
     return (
       // <RNButton title="Click"></RNButton>
-      <Button onPress={handlePressButtonDatePeriod}>{datePeriod}</Button>
+      <Button onPress={handlePressButtonDatePeriod} >{datePeriod}</Button>
+      // <TopNavigationAction icon={BackIcon} onPress={() => Alert.alert("pressed")} />
+      // <Button onPress={handlePressButtonDatePeriod} >Yo</Button> 
+
 
     )
   }
+
+  // const renderRightActions = () => (
+  //   <Button>yo</Button>
+  // )
+
+  const EditIcon = (props) => (
+    <Icon {...props} name='edit' />
+  );
+
+  const InfoIcon = (props) => (
+    <Icon {...props} name='info' />
+  );
+
+  const LogoutIcon = (props) => (
+    <Icon {...props} name='log-out' />
+  );
+
+  const renderMenuAction = () => (
+    <TopNavigationAction icon={MenuIcon} onPress={toggleMenu} />
+  );
+
+  const MenuIcon = (props) => (
+    <Icon {...props} name='more-vertical' />
+  );
+
+
+  const renderRightActions = () => (
+    <React.Fragment>
+      <TopNavigationAction icon={EditIcon} />
+      <OverflowMenu
+        anchor={renderMenuAction}
+      // visible={menuVisible}
+      // onBackdropPress={toggleMenu}
+      >
+        <MenuItem accessoryLeft={InfoIcon} title='About' />
+        <MenuItem accessoryLeft={LogoutIcon} title='Logout' />
+      </OverflowMenu>
+    </React.Fragment>
+  );
 
 
   const TopNavigationSimpleUsageShowcase = () => (
     <TopNavigation
       accessoryLeft={BackAction}
       // accessoryRight={DatePicker}
-      accessoryRight={DatePicker}
+      accessoryRight={DatePeriodPicker}
       title='Consumptions'
       alignment='center'
     />
@@ -182,26 +226,51 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
   //   />
   // );
 
+  const renderSettingsAction = () => (
+    <TopNavigationAction icon={SettingsIcon} onPress={() => Alert.alert("suyoku")} />
+  );
+
+  const renderBackAction = () => (
+    <TopNavigationAction icon={BackIcon} />
+  );
+
+
+
+  const SettingsIcon = (props) => (
+    <Icon {...props} name='settings' />
+  );
+
+
 
   return (
-    <>
-      <TopNavigationSimpleUsageShowcase />
-      <Layout style={{ flex: 1, alignItems: 'center', }}>
-        <View style={{ paddingBottom: 10, borderBottomWidth: 1, width: '100%' }}>
-          <Text style={{ marginBottom: 5, textAlign: 'center' }}>Total Consumptions Today: {globalTotalAmount}gr</Text>
-          <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
-            consumptions: consumptionsCtx,
-            setConsumptions: setConsumptions,
-          })} style={{ alignSelf: 'center' }}>Add</Button>
-        </View>
-        <List
-          style={styles.container}
-          data={filteredConsumptions}
-          renderItem={renderItem}
-          ItemSeparatorComponent={Divider}
-        />
-      </Layout>
-    </>
+    // <>
+    <Layout style={{ flex: 1, /*alignItems: 'center', */ }}>
+      {/* <TopNavigationSimpleUsageShowcase /> */}
+      {/* <TopNavigationSimpleUsageShowcase /> */}
+      <CustomTopNavigation {...props} handlePressChange={() => Alert.alert("yolo okay")} />
+      <View style={{ paddingBottom: 10, borderBottomWidth: 1, width: '100%' }}>
+        <Text style={{ marginBottom: 5, textAlign: 'center' }}>Total Consumptions Today: {globalTotalAmount}gr</Text>
+        <DatePeriodPicker />
+        <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
+          consumptions: consumptionsCtx,
+          setConsumptions: setConsumptions,
+        })} style={{ alignSelf: 'center' }}>Add</Button>
+
+      </View>
+      <List
+        style={styles.container}
+        data={filteredConsumptions}
+        renderItem={renderItem}
+        ItemSeparatorComponent={Divider}
+      />
+    </Layout>
+    // </>
+  )
+}
+
+const Bego = () => {
+  return (
+    <Button onPress={() => Alert.alert("ok")}>ok</Button>
   )
 }
 
