@@ -247,10 +247,9 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
     <Layout style={{ flex: 1, /*alignItems: 'center', */ }}>
       {/* <TopNavigationSimpleUsageShowcase /> */}
       {/* <TopNavigationSimpleUsageShowcase /> */}
-      <CustomTopNavigation {...props} handlePressChange={() => Alert.alert("yolo okay")} />
+      <CustomTopNavigation {...props} handlePressChange={toggleDatePeriod} rightText={datePeriod} />
       <View style={{ paddingBottom: 10, borderBottomWidth: 1, width: '100%' }}>
         <Text style={{ marginBottom: 5, textAlign: 'center' }}>Total Consumptions Today: {globalTotalAmount}gr</Text>
-        <DatePeriodPicker />
         <Button status='success' onPress={() => navigation.navigate('Add Consumption', {
           consumptions: consumptionsCtx,
           setConsumptions: setConsumptions,
