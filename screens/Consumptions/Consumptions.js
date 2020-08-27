@@ -203,7 +203,7 @@ const Consumptions = ({ navigation, state, route, ...props }) => {
       // console.log('diffDay ;', diffDay);
       filteredConsumptions = consumptionsCtx.filter(item => {
         const diffDay = differenceInDays(new Date(parseInt(item?.createdDate)), new Date(last7Days));
-        return diffDay <= 7;
+        return diffDay <= 7 && diffDay > 0;
       });
     } else if (datePeriod === "Today") {
       filteredConsumptions = consumptionsCtx.filter(item => {
