@@ -36,7 +36,7 @@ const BottomTabBar = ({ navigation, state, ...props }) => {
         ...props
       }
       )}>
-      <BottomNavigationTab title='Home' icon={HomeIcon} />
+      <BottomNavigationTab title='Today' icon={HomeIcon} />
       <BottomNavigationTab title='Consumptions' icon={FileIcon} />
       <BottomNavigationTab title='Profile' icon={ProfileIcon} />
       {/* <BottomNavigationTab title='Consumptions' icon={FileIcon} /> */}
